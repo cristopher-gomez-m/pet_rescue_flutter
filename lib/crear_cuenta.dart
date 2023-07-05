@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart' as path;
+import 'package:pet_rescue_flutter/MyOpenHelper.dart';
 
 class CrearCuenta extends StatefulWidget {
   const CrearCuenta({super.key});
@@ -16,7 +16,7 @@ class _CrearCuenta extends State<CrearCuenta> {
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
    
-
+/*
     Future<Database> initDatabase() async {
       late Future<Database> database;
       final databasePath = await getDatabasesPath();
@@ -38,13 +38,13 @@ class _CrearCuenta extends State<CrearCuenta> {
       );
       return database;
     }
-
+*/
     @override
     Future<void> initState() async {
       super.initState();
-      await initDatabase();
+      await MyOpenHelper.initDatabase();
     }
-
+ 
     initState();
 
     void _showAlertDialog(BuildContext context, String message) {
@@ -68,7 +68,7 @@ class _CrearCuenta extends State<CrearCuenta> {
     }
 
     Future<void> _insertAccount(String email, String password) async {
-      var db = await initDatabase();
+      var db = await MyOpenHelper.initDatabase();
       await db.insert(
         'accounts',
         {'email': email, 'password': password},
