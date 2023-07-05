@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_rescue_flutter/crear_cuenta.dart';
+import 'package:pet_rescue_flutter/principal.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -21,8 +22,8 @@ class LoginScreen extends StatelessWidget {
               Center(
                 child: Image.asset(
                   'assets/perro.png',
-                  width: 100.0,
-                  height: 100.0,
+                  width: 128.0,
+                  height: 128.0,
                 ),
               ),
               const SizedBox(height: 16.0),
@@ -66,8 +67,14 @@ class LoginScreen extends StatelessWidget {
                 child: FractionallySizedBox(
                   widthFactor: 0.9,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Perform login logic here
+                      onPressed: () {
+                      // Perform account creation logic here
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PrincipalScreen(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       fixedSize: const Size.fromHeight(50.0),
