@@ -4,94 +4,91 @@ import 'package:pet_rescue_flutter/MyOpenHelper.dart';
 
 class CrearCuenta extends StatefulWidget {
   const CrearCuenta({super.key});
-
   @override
-  // ignore: library_private_types_in_public_api
-  _CrearCuenta createState() => _CrearCuenta();
+  _CrearCuentaState createState() => _CrearCuentaState();
 }
 
-class _CrearCuenta extends State<CrearCuenta> {
+class _CrearCuentaState extends State<CrearCuenta> {
+  TextEditingController nombreController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController apellidoController = TextEditingController();
+  TextEditingController telefonoController = TextEditingController();
+  TextEditingController direccionController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      MyOpenHelper.initDatabase();
+    });
+  }
+
+  void _showAlertDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Alerta'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _insertAccount() async {
+    var db = await MyOpenHelper.initDatabase();
+    String email = emailController.text;
+    String password = passwordController.text;
+    String nombre = nombreController.text;
+    String apellido = apellidoController.text;
+    String telefono = telefonoController.text;
+    String direccion = direccionController.text;
+    await db.insert(
+      'usuarios',
+      {
+        'email': email,
+        'password': password,
+        'nombre': nombre,
+        'apellido': apellido,
+        'telefono': telefono,
+        'direccion': direccion
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    _showAlertDialog(context, 'Cuenta creada');
+  }
+
+  void _showSuccessSnackBar(BuildContext context) {
+    _showAlertDialog(context, 'Cuenta creada');
+  }
+
+  bool _validateFields() {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      _showAlertDialog(context, 'Por favor, complete todos los campos.');
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController nombreController = TextEditingController();
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController apellidoController = TextEditingController();
-    TextEditingController telefonoController = TextEditingController();
-    TextEditingController direccionController = TextEditingController();
-    @override
-    Future<void> initState() async {
-      super.initState();
-      await MyOpenHelper.initDatabase();
-    }
-
-    initState();
-
-    void _showAlertDialog(BuildContext context, String message) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Alerta'),
-            content: Text(message),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-
-    Future<void> _insertAccount() async {
-      var db = await MyOpenHelper.initDatabase();
-      String email = emailController.text;
-      String password = passwordController.text;
-      String nombre = nombreController.text;
-      String apellido = apellidoController.text;
-      String telefono = telefonoController.text;
-      String direccion = direccionController.text;
-      await db.insert(
-        'usuarios',
-        {
-          'email': email,
-          'password': password,
-          'nombre': nombre,
-         'apellido': apellido,
-          'telefono':telefono,
-          'direccion':direccion
-        },
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-      // ignore: use_build_context_synchronously
-      _showAlertDialog(context, 'Cuenta creada');
-    }
-
-    void _showSuccessSnackBar(BuildContext context) {
-      _showAlertDialog(context, 'Cuenta creada');
-    }
-
-    bool _validateFields() {
-      if (emailController.text.isEmpty || passwordController.text.isEmpty
-      /*|| nombreController.text.isEmpty || apellidoController.text.isEmpty
-      || telefonoController.text.isEmpty || direccionController.text.isEmpty*/) {
-        _showAlertDialog(context, 'Por favor, complete todos los campos.');
-        return false;
-      }
-      return true;
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Crear cuenta'),
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.only(top: 100.0, left: 16.0, right: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          margin: const EdgeInsets.only(top: 100.0),
           child: Column(
             children: [
               Center(
@@ -105,63 +102,111 @@ class _CrearCuenta extends State<CrearCuenta> {
                 controller: nombreController,
                 decoration: const InputDecoration(
                   labelText: 'Nombre',
-                  prefixIcon: Icon(Icons.person),
+                  labelStyle: TextStyle(color: Color(0xFF7689DE)),
+                  prefixIcon: Icon(Icons.person, color: Color(0xFF7689DE)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF7689DE)),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF7689DE)),
+                  ),
                 ),
               ),
               TextFormField(
                 controller: apellidoController,
                 decoration: const InputDecoration(
                   labelText: 'Apellido',
-                  prefixIcon: Icon(Icons.person),
+                  labelStyle: TextStyle(color: Color(0xFF7689DE)),
+                  prefixIcon: Icon(Icons.person, color: Color(0xFF7689DE)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF7689DE)),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF7689DE)),
+                  ),
                 ),
               ),
               TextFormField(
                 controller: telefonoController,
                 decoration: const InputDecoration(
-                  labelText: 'telefono',
-                  prefixIcon: Icon(Icons.phone),
+                  labelText: 'Teléfono',
+                  labelStyle: TextStyle(color: Color(0xFF7689DE)),
+                  prefixIcon: Icon(Icons.phone, color: Color(0xFF7689DE)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF7689DE)),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF7689DE)),
+                  ),
                 ),
               ),
               TextFormField(
                 controller: direccionController,
                 decoration: const InputDecoration(
-                  labelText: 'direccion',
-                  prefixIcon: Icon(Icons.house),
+                  labelText: 'Dirección',
+                  labelStyle: TextStyle(color: Color(0xFF7689DE)),
+                  prefixIcon: Icon(Icons.house, color: Color(0xFF7689DE)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF7689DE)),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF7689DE)),
+                  ),
                 ),
               ),
               TextFormField(
                 controller: emailController,
                 decoration: const InputDecoration(
-                  labelText: 'email',
-                  prefixIcon: Icon(Icons.email),
+                  labelText: 'Email',
+                  labelStyle: TextStyle(color: Color(0xFF7689DE)),
+                  prefixIcon: Icon(Icons.email, color: Color(0xFF7689DE)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF7689DE)),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF7689DE)),
+                  ),
                 ),
               ),
               TextFormField(
                 controller: passwordController,
                 decoration: const InputDecoration(
-                  labelText: 'contrasena',
-                  prefixIcon: Icon(Icons.password),
+                  labelText: 'Contraseña',
+                  labelStyle: TextStyle(color: Color(0xFF7689DE)),
+                  prefixIcon: Icon(Icons.password, color: Color(0xFF7689DE)),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF7689DE)),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF7689DE)),
+                  ),
                 ),
               ),
               const SizedBox(height: 16.0),
               ButtonTheme(
                 minWidth: double.infinity,
                 child: FractionallySizedBox(
-                  widthFactor: 0.5,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      // Perform login logic here
-                      if (_validateFields()) {
-                       await _insertAccount().then((_) {
-                          _showSuccessSnackBar(context);
-                        });
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: const Size.fromHeight(5.0),
-                      backgroundColor: Colors.blue,
+                  widthFactor: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: 32.0), // Padding hacia abajo
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (_validateFields()) {
+                          await _insertAccount().then((_) {
+                            _showSuccessSnackBar(context);
+                          });
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: const Size.fromHeight(50.0),
+                        backgroundColor: const Color(0xFF7689DE),
+                      ),
+                      child: const Text(
+                        'Crear cuenta',
+                        style: TextStyle(fontSize: 18.0),
+                      ),
                     ),
-                    child: const Text('Login'),
                   ),
                 ),
               ),
