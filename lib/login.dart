@@ -1,12 +1,57 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:pet_rescue_flutter/crear_cuenta.dart';
 import 'package:pet_rescue_flutter/principal.dart';
+import 'package:pet_rescue_flutter/MyOpenHelper.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+    Future<bool> loginUser(String email, String password) async {
+      final db = await MyOpenHelper.initDatabase();
+
+      final result = await db.query(
+        'usuarios',
+        where: 'email = ?',
+        whereArgs: [email],
+        limit: 1,
+      );
+
+      if (result.isNotEmpty) {
+        final storedPassword = result.first['password'] as String;
+        return password == storedPassword;
+      }
+
+      return false;
+    }
+
+    void _showAlertDialog(BuildContext context, String message) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Alerta'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -27,9 +72,10 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16.0),
-              const FractionallySizedBox(
+              FractionallySizedBox(
                 widthFactor: 0.9,
                 child: TextField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     labelStyle: TextStyle(color: Color(0xFF7689DE)),
@@ -44,10 +90,11 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16.0),
-              const FractionallySizedBox(
+              FractionallySizedBox(
                 widthFactor: 0.9,
                 child: TextField(
                   obscureText: true,
+                  controller: passwordController,
                   decoration: InputDecoration(
                     labelText: 'Password',
                     labelStyle: TextStyle(color: Color(0xFF7689DE)),
@@ -67,14 +114,23 @@ class LoginScreen extends StatelessWidget {
                 child: FractionallySizedBox(
                   widthFactor: 0.9,
                   child: ElevatedButton(
-                      onPressed: () {
+                    onPressed: () async {
                       // Perform account creation logic here
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const PrincipalScreen(),
-                        ),
-                      );
+                      final email = emailController.text;
+                      final password = passwordController.text;
+                      final isLoggedIn = await loginUser(email, password);
+                      if (isLoggedIn) {
+                        // ignore: use_build_context_synchronously
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const PrincipalScreen(),
+                          ),
+                        );
+                      }else{
+                         // ignore: use_build_context_synchronously
+                         _showAlertDialog(context, 'La cuenta no existe');
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       fixedSize: const Size.fromHeight(50.0),

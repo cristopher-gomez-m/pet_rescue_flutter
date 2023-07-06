@@ -13,38 +13,18 @@ class CrearCuenta extends StatefulWidget {
 class _CrearCuenta extends State<CrearCuenta> {
   @override
   Widget build(BuildContext context) {
+    TextEditingController nombreController = TextEditingController();
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
-   
-/*
-    Future<Database> initDatabase() async {
-      late Future<Database> database;
-      final databasePath = await getDatabasesPath();
-      final pathToDatabase = path.join(databasePath, 'my_database.db');
-      database = openDatabase(
-        pathToDatabase,
-        version: 1,
-        onCreate: (db, version) async {
-          await db.execute(
-            '''
-          CREATE TABLE IF NOT EXISTS accounts (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT,
-            password TEXT
-          )
-          ''',
-          );
-        },
-      );
-      return database;
-    }
-*/
+    TextEditingController apellidoController = TextEditingController();
+    TextEditingController telefonoController = TextEditingController();
+    TextEditingController direccionController = TextEditingController();
     @override
     Future<void> initState() async {
       super.initState();
       await MyOpenHelper.initDatabase();
     }
- 
+
     initState();
 
     void _showAlertDialog(BuildContext context, String message) {
@@ -67,11 +47,24 @@ class _CrearCuenta extends State<CrearCuenta> {
       );
     }
 
-    Future<void> _insertAccount(String email, String password) async {
+    Future<void> _insertAccount() async {
       var db = await MyOpenHelper.initDatabase();
+      String email = emailController.text;
+      String password = passwordController.text;
+      String nombre = nombreController.text;
+      String apellido = apellidoController.text;
+      String telefono = telefonoController.text;
+      String direccion = direccionController.text;
       await db.insert(
-        'accounts',
-        {'email': email, 'password': password},
+        'usuarios',
+        {
+          'email': email,
+          'password': password,
+          'nombre': nombre,
+         'apellido': apellido,
+          'telefono':telefono,
+          'direccion':direccion
+        },
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
       // ignore: use_build_context_synchronously
@@ -83,7 +76,9 @@ class _CrearCuenta extends State<CrearCuenta> {
     }
 
     bool _validateFields() {
-      if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      if (emailController.text.isEmpty || passwordController.text.isEmpty
+      /*|| nombreController.text.isEmpty || apellidoController.text.isEmpty
+      || telefonoController.text.isEmpty || direccionController.text.isEmpty*/) {
         _showAlertDialog(context, 'Por favor, complete todos los campos.');
         return false;
       }
@@ -106,20 +101,34 @@ class _CrearCuenta extends State<CrearCuenta> {
                   height: 100.0,
                 ),
               ),
-              /*
               TextFormField(
+                controller: nombreController,
                 decoration: const InputDecoration(
-                    labelText: 'Nombre', prefixIcon: Icon(Icons.person)),
+                  labelText: 'Nombre',
+                  prefixIcon: Icon(Icons.person),
+                ),
               ),
               TextFormField(
+                controller: apellidoController,
                 decoration: const InputDecoration(
-                    labelText: 'Apellido', prefixIcon: Icon(Icons.person)),
+                  labelText: 'Apellido',
+                  prefixIcon: Icon(Icons.person),
+                ),
               ),
               TextFormField(
+                controller: telefonoController,
                 decoration: const InputDecoration(
-                    labelText: 'telefono', prefixIcon: Icon(Icons.phone)),
+                  labelText: 'telefono',
+                  prefixIcon: Icon(Icons.phone),
+                ),
               ),
-              */
+              TextFormField(
+                controller: direccionController,
+                decoration: const InputDecoration(
+                  labelText: 'direccion',
+                  prefixIcon: Icon(Icons.house),
+                ),
+              ),
               TextFormField(
                 controller: emailController,
                 decoration: const InputDecoration(
@@ -128,7 +137,7 @@ class _CrearCuenta extends State<CrearCuenta> {
                 ),
               ),
               TextFormField(
-                controller:passwordController,
+                controller: passwordController,
                 decoration: const InputDecoration(
                   labelText: 'contrasena',
                   prefixIcon: Icon(Icons.password),
@@ -140,13 +149,10 @@ class _CrearCuenta extends State<CrearCuenta> {
                 child: FractionallySizedBox(
                   widthFactor: 0.5,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       // Perform login logic here
-                      if (_validateFields()){
-                        _insertAccount(
-                          emailController.text,
-                          passwordController.text,
-                        ).then((_){
+                      if (_validateFields()) {
+                       await _insertAccount().then((_) {
                           _showSuccessSnackBar(context);
                         });
                       }
