@@ -1,7 +1,25 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-class Adopcion extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
+class Adopcion extends StatefulWidget {
   const Adopcion({Key? key}) : super(key: key);
+
+  @override
+  _AdopcionState createState() => _AdopcionState();
+}
+
+class _AdopcionState extends State<Adopcion> {
+  XFile? _selectedImage;
+
+  Future<void> _openGallery() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _selectedImage = pickedImage;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -250,6 +268,53 @@ class Adopcion extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      height: 100,
+                      child: _selectedImage != null
+                          ? Image.file(
+                              File(_selectedImage!.path),
+                              fit: BoxFit.cover,
+                            )
+                          : Container(),
+                    ),
+                  ),
+                  const SizedBox(width: 16.0),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: _openGallery,
+                        child: const Text('Abrir galería'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16.0),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 32.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Lógica para manejar el botón "Registrar"
+                          },
+                          child: const Text('Registrar'),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
