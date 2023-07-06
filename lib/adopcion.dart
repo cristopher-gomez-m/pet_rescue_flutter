@@ -240,6 +240,18 @@ class Adopcion extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 16.0),
+              const Padding(
+                padding: EdgeInsets.only(top: 5.0),
+                child: Text(
+                  'Seleccione una foto',
+                  style: TextStyle(
+                    color: Color(0xFF7689DE),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
