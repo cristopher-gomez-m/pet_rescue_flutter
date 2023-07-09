@@ -50,8 +50,6 @@ class LoginScreen extends StatelessWidget {
       );
     }
 
-
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -127,9 +125,9 @@ class LoginScreen extends StatelessWidget {
                             builder: (context) => const PrincipalScreen(),
                           ),
                         );
-                      }else{
-                         // ignore: use_build_context_synchronously
-                         _showAlertDialog(context, 'La cuenta no existe');
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        _showAlertDialog(context, 'La cuenta no existe');
                       }
                     },
                     style: ElevatedButton.styleFrom(

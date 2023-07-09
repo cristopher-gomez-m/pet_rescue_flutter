@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_rescue_flutter/adopcion.dart';
+import 'package:pet_rescue_flutter/menu.dart';
 
 class PrincipalScreen extends StatelessWidget {
   const PrincipalScreen({Key? key}) : super(key: key);
@@ -9,6 +10,9 @@ class PrincipalScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('PetRescue'),
+        actions: const [
+         CustomMenu(),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
