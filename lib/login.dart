@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_rescue_flutter/crear_cuenta.dart';
 import 'package:pet_rescue_flutter/principal.dart';
 import 'package:pet_rescue_flutter/MyOpenHelper.dart';
+import 'package:pet_rescue_flutter/user_service.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -24,7 +25,13 @@ class LoginScreen extends StatelessWidget {
 
       if (result.isNotEmpty) {
         final storedPassword = result.first['password'] as String;
-        return password == storedPassword;
+        if (password == storedPassword) {
+          final userId = result.first['id'] as int;
+          UserService.instance.userId = userId;
+          return true;
+        } else {
+          return false;
+        }
       }
 
       return false;

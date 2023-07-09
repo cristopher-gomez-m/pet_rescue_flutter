@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pet_rescue_flutter/adopcion.dart';
 import 'package:pet_rescue_flutter/menu.dart';
+import 'package:pet_rescue_flutter/dogs_list.dart';
 
 class PrincipalScreen extends StatelessWidget {
   const PrincipalScreen({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class PrincipalScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('PetRescue'),
         actions: const [
-         CustomMenu(),
+          CustomMenu(),
         ],
       ),
       body: SingleChildScrollView(
@@ -82,7 +83,12 @@ class PrincipalScreen extends StatelessWidget {
                   height: 50.0,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Acción a realizar al presionar el botón
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DogsList(),
+                        ),
+                      );
                     },
                     child: const Text(
                       'Adoptar',

@@ -1,8 +1,11 @@
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:pet_rescue_flutter/MyOpenHelper.dart';
+import 'package:pet_rescue_flutter/user_service.dart';
 class Adopcion extends StatefulWidget {
   const Adopcion({Key? key}) : super(key: key);
 
@@ -12,14 +15,85 @@ class Adopcion extends StatefulWidget {
 
 class _AdopcionState extends State<Adopcion> {
   XFile? _selectedImage;
+final _nombreController = TextEditingController();
+  final _edadController = TextEditingController();
+  final _razaController = TextEditingController();
+  String _tamanioSeleccionado = 'Pequeño';
+  String _generoSeleccionado = 'Macho';
+  bool _rabiaSeleccionada = false;
+  bool _parvovirusSeleccionado = false;
+  bool _moquilloSeleccionado = false;
+  bool _hepatitisSeleccionada = false;
+
 
   Future<void> _openGallery() async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
     setState(() {
       _selectedImage = pickedImage;
+      print('IMgaen  aquiiiiiiii: $_selectedImage');
     });
   }
+
+ void _showAlertDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Alerta'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+  void _showSuccessSnackBar(BuildContext context) {
+    _showAlertDialog(context, 'Cuenta creada');
+  }
+  Future<void> _guardarDatos() async {
+    final database = await MyOpenHelper.initDatabase();
+  
+    final nombre = _nombreController.text;
+    final edad = _edadController.text;
+    final raza = _razaController.text;
+    final tamanio = _tamanioSeleccionado;
+    final genero = _generoSeleccionado;
+ // Verificar si las vacunas son nulas antes de usarlas en la condición
+  final vac1 = _rabiaSeleccionada != null ? (_rabiaSeleccionada ? 'Sí' : 'No') : 'No';
+  final vac2 = _parvovirusSeleccionado != null ? (_parvovirusSeleccionado ? 'Sí' : 'No') : 'No';
+  final vac3 = _moquilloSeleccionado != null ? (_moquilloSeleccionado ? 'Sí' : 'No') : 'No';
+  final vac4 = _hepatitisSeleccionada != null ? (_hepatitisSeleccionada ? 'Sí' : 'No') : 'No';
+
+    final imagenPath = _selectedImage?.path ?? '';
+      final imageFile = File(imagenPath);
+      final realPath = imageFile.path;
+      print('IMgaen  aquiiiiiiii: $realPath');
+    await database.insert('dogs', {
+      'nombre': nombre,
+      'edad': edad,
+      'raza': raza,
+      'tamaño': tamanio,
+      'genero': genero,
+    'vac1': vac1,
+    'vac2': vac2,
+    'vac3': vac3,
+    'vac4': vac4,
+      'imagen_path': realPath,
+      'usuario_id': UserService.instance.userId,
+    });
+  
+    await database.close();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +117,12 @@ class _AdopcionState extends State<Adopcion> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              const Center(
+               Center(
                 child: FractionallySizedBox(
                   widthFactor: 1,
                   child: TextField(
-                    decoration: InputDecoration(
+                    controller: _nombreController,
+                    decoration: const InputDecoration(
                       labelText: 'Nombre',
                       labelStyle: TextStyle(color: Color(0xFF7689DE)),
                       enabledBorder: UnderlineInputBorder(
@@ -62,11 +137,12 @@ class _AdopcionState extends State<Adopcion> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              const Center(
+               Center(
                 child: FractionallySizedBox(
                   widthFactor: 1,
                   child: TextField(
-                    decoration: InputDecoration(
+                    controller: _edadController,
+                    decoration: const InputDecoration(
                       labelText: 'Edad (años o meses)',
                       labelStyle: TextStyle(color: Color(0xFF7689DE)),
                       enabledBorder: UnderlineInputBorder(
@@ -81,11 +157,12 @@ class _AdopcionState extends State<Adopcion> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              const Center(
+               Center(
                 child: FractionallySizedBox(
                   widthFactor: 1,
                   child: TextField(
-                    decoration: InputDecoration(
+                    controller: _razaController,
+                    decoration: const InputDecoration(
                       labelText: 'Raza',
                       labelStyle: TextStyle(color: Color(0xFF7689DE)),
                       enabledBorder: UnderlineInputBorder(
@@ -152,9 +229,11 @@ class _AdopcionState extends State<Adopcion> {
                     children: [
                       Radio(
                         value: 'Macho',
-                        groupValue: null,
+                        groupValue: _generoSeleccionado,
                         onChanged: (value) {
-                          // Lógica para manejar el cambio de valor seleccionado
+                           setState(() {
+                            _generoSeleccionado = value.toString();
+                          });
                         },
                       ),
                       const Text(
@@ -167,9 +246,12 @@ class _AdopcionState extends State<Adopcion> {
                     children: [
                       Radio(
                         value: 'Hembra',
-                        groupValue: null,
+                        groupValue: _generoSeleccionado,
                         onChanged: (value) {
                           // Lógica para manejar el cambio de valor seleccionado
+                          setState(() {
+                            _generoSeleccionado = value.toString();
+                          });
                         },
                       ),
                       const Text(
@@ -199,9 +281,11 @@ class _AdopcionState extends State<Adopcion> {
                   Row(
                     children: [
                       Checkbox(
-                        value: false,
+                        value: _rabiaSeleccionada,
                         onChanged: (value) {
-                          // Lógica para manejar el cambio de valor seleccionado
+                         setState(() {
+                            _rabiaSeleccionada = value ?? false;
+                          });
                         },
                         activeColor: const Color(0xFF7689DE),
                       ),
@@ -214,9 +298,11 @@ class _AdopcionState extends State<Adopcion> {
                   Row(
                     children: [
                       Checkbox(
-                        value: false,
+                        value: _parvovirusSeleccionado,
                         onChanged: (value) {
-                          // Lógica para manejar el cambio de valor seleccionado
+                          setState(() {
+                            _parvovirusSeleccionado = value ?? false;
+                          });
                         },
                         activeColor: const Color(0xFF7689DE),
                       ),
@@ -229,9 +315,11 @@ class _AdopcionState extends State<Adopcion> {
                   Row(
                     children: [
                       Checkbox(
-                        value: false,
+                        value: _moquilloSeleccionado,
                         onChanged: (value) {
-                          // Lógica para manejar el cambio de valor seleccionado
+                           setState(() {
+                            _moquilloSeleccionado = value ?? false;
+                          });
                         },
                         activeColor: const Color(0xFF7689DE),
                       ),
@@ -244,9 +332,11 @@ class _AdopcionState extends State<Adopcion> {
                   Row(
                     children: [
                       Checkbox(
-                        value: false,
+                        value: _hepatitisSeleccionada,
                         onChanged: (value) {
-                          // Lógica para manejar el cambio de valor seleccionado
+                          setState(() {
+                            _hepatitisSeleccionada = value ?? false;
+                          });
                         },
                         activeColor: const Color(0xFF7689DE),
                       ),
@@ -307,8 +397,11 @@ class _AdopcionState extends State<Adopcion> {
                       child: Container(
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             // Lógica para manejar el botón "Registrar"
+                           await _guardarDatos().then((_) {
+                            _showSuccessSnackBar(context);
+                          });
                           },
                           child: const Text('Registrar'),
                         ),
