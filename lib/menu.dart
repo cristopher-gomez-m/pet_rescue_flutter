@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dogs_list.dart'; // Importa el archivo que contiene la pantalla DogList
+import 'adopcion.dart'; // Importa el archivo que contiene la pantalla Adopcion
+import 'login.dart'; // Importa el archivo que contiene la pantalla LoginScreen
 
 class CustomMenu extends StatelessWidget {
   const CustomMenu({Key? key}) : super(key: key);
@@ -9,9 +12,20 @@ class CustomMenu extends StatelessWidget {
       onSelected: (value) {
         // Aquí puedes manejar la opción seleccionada del menú
         if (value == 'opcion1') {
-          // Acción para la opción 1
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => DogsList()),
+          );
         } else if (value == 'opcion2') {
-          // Acción para la opción 2
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Adopcion()),
+          );
+        } else if (value == 'opcion3') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+          );
         }
       },
       itemBuilder: (BuildContext context) {
