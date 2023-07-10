@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:pet_rescue_flutter/MyOpenHelper.dart';
 import 'dart:io';
 
+import 'package:pet_rescue_flutter/solicitud.dart';
+
 class DogDetails extends StatelessWidget {
   final int dogId;
 
-  const DogDetails({super.key, required this.dogId});
+  const DogDetails({Key? key, required this.dogId}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic>? protectorData;
@@ -51,6 +54,7 @@ class DogDetails extends StatelessWidget {
 
     // Llamada a la función para obtener los datos del perro al construir el widget
     fetchDogData();
+
     return FutureBuilder<Map<String, dynamic>>(
       future: fetchDogData(),
       builder: (context, snapshot) {
@@ -101,9 +105,19 @@ class DogDetails extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        const Icon(Icons.pets), // Agregar el icono deseado
+                        Icon(
+                          Icons.pets,
+                          color: const Color(0xFF7689DE),
+                        ),
                         SizedBox(width: 8.0),
-                        Text('Nombre: ${dogData['nombre']}'),
+                        Text(
+                          'Nombre:',
+                          style: TextStyle(
+                            color: const Color(0xFF7689DE),
+                          ),
+                        ),
+                        SizedBox(width: 8.0),
+                        Text('${dogData['nombre']}'),
                       ],
                     ),
                   ),
@@ -113,9 +127,19 @@ class DogDetails extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        const Icon(Icons.cake), // Agregar el icono deseado
+                        Icon(
+                          Icons.cake,
+                          color: const Color(0xFF7689DE),
+                        ),
                         SizedBox(width: 8.0),
-                        Text('Edad: ${dogData['edad']}'),
+                        Text(
+                          'Edad:',
+                          style: TextStyle(
+                            color: const Color(0xFF7689DE),
+                          ),
+                        ),
+                        SizedBox(width: 8.0),
+                        Text('${dogData['edad']}'),
                       ],
                     ),
                   ),
@@ -125,9 +149,19 @@ class DogDetails extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        const Icon(Icons.height), // Agregar el icono deseado
+                        Icon(
+                          Icons.height,
+                          color: const Color(0xFF7689DE),
+                        ),
                         SizedBox(width: 8.0),
-                        Text('Tamaño: ${dogData['tamaño']}'),
+                        Text(
+                          'Tamaño:',
+                          style: TextStyle(
+                            color: const Color(0xFF7689DE),
+                          ),
+                        ),
+                        SizedBox(width: 8.0),
+                        Text('${dogData['tamaño']}'),
                       ],
                     ),
                   ),
@@ -137,9 +171,19 @@ class DogDetails extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        const Icon(Icons.pets), // Agregar el icono deseado
+                        Icon(
+                          Icons.pets,
+                          color: const Color(0xFF7689DE),
+                        ),
                         SizedBox(width: 8.0),
-                        Text('Raza: ${dogData['raza']}'),
+                        Text(
+                          'Raza:',
+                          style: TextStyle(
+                            color: const Color(0xFF7689DE),
+                          ),
+                        ),
+                        SizedBox(width: 8.0),
+                        Text('${dogData['raza']}'),
                       ],
                     ),
                   ),
@@ -151,6 +195,7 @@ class DogDetails extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
+                      color: const Color(0xFF7689DE),
                     ),
                   ),
                 ),
@@ -159,9 +204,19 @@ class DogDetails extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        const Icon(Icons.vaccines), // Agregar el icono deseado
+                        Icon(
+                          Icons.vaccines,
+                          color: const Color(0xFF7689DE),
+                        ),
                         SizedBox(width: 8.0),
-                        Text('Rabia: ${dogData['vac1']}'),
+                        Text(
+                          'Rabia:',
+                          style: TextStyle(
+                            color: const Color(0xFF7689DE),
+                          ),
+                        ),
+                        SizedBox(width: 8.0),
+                        Text('${dogData['vac1']}'),
                       ],
                     ),
                   ),
@@ -171,9 +226,19 @@ class DogDetails extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        const Icon(Icons.vaccines), // Agregar el icono deseado
+                        Icon(
+                          Icons.vaccines,
+                          color: const Color(0xFF7689DE),
+                        ),
                         SizedBox(width: 8.0),
-                        Text('Parvovirus canino: ${dogData['vac2']}'),
+                        Text(
+                          'Parvovirus canino:',
+                          style: TextStyle(
+                            color: const Color(0xFF7689DE),
+                          ),
+                        ),
+                        SizedBox(width: 8.0),
+                        Text('${dogData['vac2']}'),
                       ],
                     ),
                   ),
@@ -183,9 +248,19 @@ class DogDetails extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        const Icon(Icons.vaccines), // Agregar el icono deseado
+                        Icon(
+                          Icons.vaccines,
+                          color: const Color(0xFF7689DE),
+                        ),
                         SizedBox(width: 8.0),
-                        Text('Moquillo: ${dogData['vac3']}'),
+                        Text(
+                          'Moquillo:',
+                          style: TextStyle(
+                            color: const Color(0xFF7689DE),
+                          ),
+                        ),
+                        SizedBox(width: 8.0),
+                        Text('${dogData['vac3']}'),
                       ],
                     ),
                   ),
@@ -195,9 +270,19 @@ class DogDetails extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        const Icon(Icons.vaccines), // Agregar el icono deseado
+                        Icon(
+                          Icons.vaccines,
+                          color: const Color(0xFF7689DE),
+                        ),
                         SizedBox(width: 8.0),
-                        Text('Moquillo: ${dogData['vac4']}'),
+                        Text(
+                          'Moquillo:',
+                          style: TextStyle(
+                            color: const Color(0xFF7689DE),
+                          ),
+                        ),
+                        SizedBox(width: 8.0),
+                        Text('${dogData['vac4']}'),
                       ],
                     ),
                   ),
@@ -209,6 +294,7 @@ class DogDetails extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
+                      color: const Color(0xFF7689DE),
                     ),
                   ),
                 ),
@@ -217,9 +303,19 @@ class DogDetails extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        const Icon(Icons.person), // Agregar el icono deseado
+                        Icon(
+                          Icons.person,
+                          color: const Color(0xFF7689DE),
+                        ),
                         SizedBox(width: 8.0),
-                        Text('Nombre: ${protectorData!['nombre']}'),
+                        Text(
+                          'Nombre:',
+                          style: TextStyle(
+                            color: const Color(0xFF7689DE),
+                          ),
+                        ),
+                        SizedBox(width: 8.0),
+                        Text('${protectorData!['nombre']}'),
                       ],
                     ),
                   ),
@@ -229,9 +325,19 @@ class DogDetails extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        const Icon(Icons.phone), // Agregar el icono deseado
+                        Icon(
+                          Icons.phone,
+                          color: const Color(0xFF7689DE),
+                        ),
                         SizedBox(width: 8.0),
-                        Text('Telefono: ${protectorData!['telefono']}'),
+                        Text(
+                          'Telefono:',
+                          style: TextStyle(
+                            color: const Color(0xFF7689DE),
+                          ),
+                        ),
+                        SizedBox(width: 8.0),
+                        Text('${protectorData!['telefono']}'),
                       ],
                     ),
                   ),
@@ -241,29 +347,47 @@ class DogDetails extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        const Icon(Icons.email), // Agregar el icono deseado
+                        Icon(
+                          Icons.email,
+                          color: const Color(0xFF7689DE),
+                        ),
                         SizedBox(width: 8.0),
-                        Text('Email: ${protectorData!['email']}'),
+                        Text(
+                          'Email:',
+                          style: TextStyle(
+                            color: const Color(0xFF7689DE),
+                          ),
+                        ),
+                        SizedBox(width: 8.0),
+                        Text('${protectorData!['email']}'),
                       ],
                     ),
                   ),
                 ),
                 const SizedBox(height: 16.0),
-                ButtonTheme(
-                  minWidth: double.infinity,
-                  child: FractionallySizedBox(
-                    widthFactor: 0.9,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        // Perform account creation logic here
-                      },
-                      style: ElevatedButton.styleFrom(
-                        fixedSize: const Size.fromHeight(50.0),
-                        backgroundColor: const Color(0xFF7689DE),
-                      ),
-                      child: const Text(
-                        'Solicitar adopción',
-                        style: TextStyle(fontSize: 18.0),
+                Padding(
+                  padding: const EdgeInsets.all(16.0), // Added padding to the button
+                  child: ButtonTheme(
+                    minWidth: double.infinity,
+                    child: FractionallySizedBox(
+                      widthFactor: 0.9,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SolicitudPage(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          fixedSize: const Size.fromHeight(50.0),
+                          backgroundColor: const Color(0xFF7689DE),
+                        ),
+                        child: const Text(
+                          'Solicitar adopción',
+                          style: TextStyle(fontSize: 18.0),
+                        ),
                       ),
                     ),
                   ),
