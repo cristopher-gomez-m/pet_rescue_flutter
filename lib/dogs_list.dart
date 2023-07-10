@@ -5,8 +5,10 @@ import 'dart:io';
 import 'package:image/image.dart' as img;
 import 'package:pet_rescue_flutter/dog_details.dart';
 
+import 'menu.dart';
+
 class DogsList extends StatefulWidget {
-  const DogsList({super.key});
+  const DogsList({Key? key}) : super(key: key);
 
   @override
   _DogsListState createState() => _DogsListState();
@@ -33,17 +35,24 @@ class _DogsListState extends State<DogsList> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Map<String, dynamic>>>(
-      future: _dogsFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Text('No hay datos');
-        } else {
-          return Container(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('PetRescue'),
+        actions: const [
+          CustomMenu(),
+        ],
+      ),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: _dogsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Text('');
+          } else {
+            return Container(
               color: Colors.white, // Cambiar el color de fondo de la pantalla
               child: ListView.builder(
                 itemCount: snapshot.data!.length,
@@ -75,9 +84,11 @@ class _DogsListState extends State<DogsList> {
                     ),
                   );
                 },
-              ));
-        }
-      },
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }

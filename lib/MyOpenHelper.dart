@@ -12,7 +12,7 @@ class MyOpenHelper {
   static const String solicitudTableCreate =
       'CREATE TABLE solicitudes(id INTEGER PRIMARY KEY AUTOINCREMENT, nombres TEXT, telefono TEXT, interes TEXT, vivienda TEXT, espacio TEXT, tiempo TEXT, usuario_id INTEGER, FOREIGN KEY(usuario_id) REFERENCES usuarios(id))';
 
-  static const String dbName = 'datosPractica6.db';
+  static const String dbName = 'datosPractica5.db';
   static const int dbVersion = 1;
 
   static Future<Database> initDatabase() async {
