@@ -3,6 +3,7 @@ import 'package:pet_rescue_flutter/MyOpenHelper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:image/image.dart' as img;
+import 'package:pet_rescue_flutter/dog_details.dart';
 
 class DogsList extends StatefulWidget {
   const DogsList({super.key});
@@ -42,37 +43,41 @@ class _DogsListState extends State<DogsList> {
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Text('No hay datos');
         } else {
-          return 
-            Container(
+          return Container(
               color: Colors.white, // Cambiar el color de fondo de la pantalla
-  child:ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              Map<String, dynamic> dogData = snapshot.data![index];
-              String nombre = dogData['nombre'];
-              String raza = dogData['raza'];
-              String imagenPath = dogData['imagen_path'];
- 
-              return Card(
-                color: Colors.white,
-                child: ListTile(
-                  leading: Image.file(File(imagenPath)),
-                  title: Text(nombre),
-                  subtitle: Text(raza),
-                  trailing: ElevatedButton(
-                    onPressed: () {
-                      // Acción al presionar el botón "Ver más"
-                    },
-                    child: Text('Ver más'),
-                  ),
-                ),
-              );
-            },
-          )
-          );
+              child: ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  Map<String, dynamic> dogData = snapshot.data![index];
+                  String nombre = dogData['nombre'];
+                  String raza = dogData['raza'];
+                  String imagenPath = dogData['imagen_path'];
+
+                  return Card(
+                    color: Colors.white,
+                    child: ListTile(
+                      leading: Image.file(File(imagenPath)),
+                      title: Text(nombre),
+                      subtitle: Text(raza),
+                      trailing: ElevatedButton(
+                        onPressed: () {
+                          // Acción al presionar el botón "Ver más"
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DogDetails(dogId: dogData['id']),
+                            ),
+                          );
+                        },
+                        child: Text('Ver más'),
+                      ),
+                    ),
+                  );
+                },
+              ));
         }
       },
     );
   }
-  
 }
