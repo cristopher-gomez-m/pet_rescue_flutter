@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:pet_rescue_flutter/MyOpenHelper.dart';
 
 class CrearCuenta extends StatefulWidget {
   const CrearCuenta({super.key});
-  @override
+   @override
   _CrearCuentaState createState() => _CrearCuentaState();
 }
 
@@ -139,6 +140,10 @@ class _CrearCuentaState extends State<CrearCuenta> {
                     borderSide: BorderSide(color: Color(0xFF7689DE)),
                   ),
                 ),
+                keyboardType: TextInputType.phone, // Establece el tipo de teclado a numérico
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly // Acepta solo dígitos
+                ],
               ),
               TextFormField(
                 controller: direccionController,
