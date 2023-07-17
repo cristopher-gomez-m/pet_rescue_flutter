@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pet_rescue_flutter/MyOpenHelper.dart';
 import 'package:pet_rescue_flutter/user_service.dart';
+
 class Adopcion extends StatefulWidget {
   const Adopcion({Key? key}) : super(key: key);
 
@@ -15,7 +16,7 @@ class Adopcion extends StatefulWidget {
 
 class _AdopcionState extends State<Adopcion> {
   XFile? _selectedImage;
-final _nombreController = TextEditingController();
+  final _nombreController = TextEditingController();
   final _edadController = TextEditingController();
   final _razaController = TextEditingController();
   String _tamanioSeleccionado = 'Pequeño';
@@ -24,7 +25,6 @@ final _nombreController = TextEditingController();
   bool _parvovirusSeleccionado = false;
   bool _moquilloSeleccionado = false;
   bool _hepatitisSeleccionada = false;
-
 
   Future<void> _openGallery() async {
     final picker = ImagePicker();
@@ -35,7 +35,18 @@ final _nombreController = TextEditingController();
     });
   }
 
- void _showAlertDialog(BuildContext context, String message) {
+  bool validateFields() {
+    if (_nombreController.text.isEmpty ||
+        _edadController.text.isEmpty ||
+        _razaController.text.isEmpty ||
+        _tamanioSeleccionado.isEmpty) {
+      _showAlertDialog(context, 'Por favor, complete todos los campos.');
+      return false;
+    }
+    return true;
+  }
+
+  void _showAlertDialog(BuildContext context, String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -55,45 +66,51 @@ final _nombreController = TextEditingController();
     );
   }
 
-
   void _showSuccessSnackBar(BuildContext context) {
-    _showAlertDialog(context, 'Cuenta creada');
+    _showAlertDialog(context, 'Mascota registrada correctamente');
   }
+
   Future<void> _guardarDatos() async {
     final database = await MyOpenHelper.initDatabase();
-  
+
     final nombre = _nombreController.text;
     final edad = _edadController.text;
     final raza = _razaController.text;
     final tamanio = _tamanioSeleccionado;
     final genero = _generoSeleccionado;
- // Verificar si las vacunas son nulas antes de usarlas en la condición
-  final vac1 = _rabiaSeleccionada != null ? (_rabiaSeleccionada ? 'Sí' : 'No') : 'No';
-  final vac2 = _parvovirusSeleccionado != null ? (_parvovirusSeleccionado ? 'Sí' : 'No') : 'No';
-  final vac3 = _moquilloSeleccionado != null ? (_moquilloSeleccionado ? 'Sí' : 'No') : 'No';
-  final vac4 = _hepatitisSeleccionada != null ? (_hepatitisSeleccionada ? 'Sí' : 'No') : 'No';
+    // Verificar si las vacunas son nulas antes de usarlas en la condición
+    final vac1 =
+        _rabiaSeleccionada != null ? (_rabiaSeleccionada ? 'Sí' : 'No') : 'No';
+    final vac2 = _parvovirusSeleccionado != null
+        ? (_parvovirusSeleccionado ? 'Sí' : 'No')
+        : 'No';
+    final vac3 = _moquilloSeleccionado != null
+        ? (_moquilloSeleccionado ? 'Sí' : 'No')
+        : 'No';
+    final vac4 = _hepatitisSeleccionada != null
+        ? (_hepatitisSeleccionada ? 'Sí' : 'No')
+        : 'No';
 
     final imagenPath = _selectedImage?.path ?? '';
-      final imageFile = File(imagenPath);
-      final realPath = imageFile.path;
-      print('IMgaen  aquiiiiiiii: $realPath');
+    final imageFile = File(imagenPath);
+    final realPath = imageFile.path;
+    print('IMgaen  aquiiiiiiii: $realPath');
     await database.insert('dogs', {
       'nombre': nombre,
       'edad': edad,
       'raza': raza,
       'tamaño': tamanio,
       'genero': genero,
-    'vac1': vac1,
-    'vac2': vac2,
-    'vac3': vac3,
-    'vac4': vac4,
+      'vac1': vac1,
+      'vac2': vac2,
+      'vac3': vac3,
+      'vac4': vac4,
       'imagen_path': realPath,
       'usuario_id': UserService.instance.userId,
     });
-  
+
     await database.close();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +134,7 @@ final _nombreController = TextEditingController();
                 ),
               ),
               const SizedBox(height: 16.0),
-               Center(
+              Center(
                 child: FractionallySizedBox(
                   widthFactor: 1,
                   child: TextField(
@@ -137,7 +154,7 @@ final _nombreController = TextEditingController();
                 ),
               ),
               const SizedBox(height: 16.0),
-               Center(
+              Center(
                 child: FractionallySizedBox(
                   widthFactor: 1,
                   child: TextField(
@@ -157,7 +174,7 @@ final _nombreController = TextEditingController();
                 ),
               ),
               const SizedBox(height: 16.0),
-               Center(
+              Center(
                 child: FractionallySizedBox(
                   widthFactor: 1,
                   child: TextField(
@@ -231,7 +248,7 @@ final _nombreController = TextEditingController();
                         value: 'Macho',
                         groupValue: _generoSeleccionado,
                         onChanged: (value) {
-                           setState(() {
+                          setState(() {
                             _generoSeleccionado = value.toString();
                           });
                         },
@@ -283,7 +300,7 @@ final _nombreController = TextEditingController();
                       Checkbox(
                         value: _rabiaSeleccionada,
                         onChanged: (value) {
-                         setState(() {
+                          setState(() {
                             _rabiaSeleccionada = value ?? false;
                           });
                         },
@@ -317,7 +334,7 @@ final _nombreController = TextEditingController();
                       Checkbox(
                         value: _moquilloSeleccionado,
                         onChanged: (value) {
-                           setState(() {
+                          setState(() {
                             _moquilloSeleccionado = value ?? false;
                           });
                         },
@@ -399,9 +416,11 @@ final _nombreController = TextEditingController();
                         child: ElevatedButton(
                           onPressed: () async {
                             // Lógica para manejar el botón "Registrar"
-                           await _guardarDatos().then((_) {
-                            _showSuccessSnackBar(context);
-                          });
+                            if (validateFields()) {
+                              await _guardarDatos().then((_) {
+                                _showSuccessSnackBar(context);
+                              });
+                            } else {}
                           },
                           child: const Text('Registrar'),
                         ),
