@@ -1,9 +1,91 @@
 // ignore_for_file: sort_child_properties_last
 
 import 'package:flutter/material.dart';
-
-class SolicitudPage extends StatelessWidget {
+import 'package:pet_rescue_flutter/MyOpenHelper.dart';
+class SolicitudPage extends StatefulWidget {
   const SolicitudPage({Key? key}) : super(key: key);
+
+  @override
+  _SolicitudPage createState() => _SolicitudPage();
+}
+
+
+class _SolicitudPage extends State<SolicitudPage> {
+late TextEditingController nombresController;
+  late TextEditingController telefonoController;
+  late TextEditingController interesController;
+  String? vivienda;
+  String? espacio;
+  String? tiempo;
+
+@override
+  void initState() {
+    super.initState();
+    nombresController = TextEditingController();
+    telefonoController = TextEditingController();
+    interesController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    nombresController.dispose();
+    telefonoController.dispose();
+    interesController.dispose();
+    super.dispose();
+  }
+
+void _showAlertDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Alerta'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+  void _showSuccessSnackBar(BuildContext context) {
+    _showAlertDialog(context, 'Solicitud enviada correctamente');
+  }
+
+
+Future<void> insertarSolicitud() async{
+ final database = await MyOpenHelper.initDatabase();
+
+ await database.insert(
+      'solicitudes',
+      {
+        'nombres': nombresController.text,
+        'telefono': telefonoController.text,
+        'interes': interesController.text,
+        'vivienda': vivienda,
+        'espacio': espacio,
+        'tiempo': tiempo,
+      },
+    );
+
+    await database.close();
+
+    // Restablecer los campos después de la inserción
+    nombresController.clear();
+    telefonoController.clear();
+    interesController.clear();
+    vivienda = null;
+    espacio = null;
+    tiempo = null;
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +111,11 @@ class SolicitudPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16.0),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
+               Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: nombresController,
+                  decoration: const InputDecoration(
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFF7689DE)),
                     ),
@@ -95,28 +178,36 @@ class SolicitudPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8.0),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
+               Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   children: [
                     Row(
                       children: [
                         Radio(
                           value: 'Casa',
-                          groupValue: null,
-                          onChanged: null,
+                          groupValue: vivienda,
+                          onChanged: (value){
+                            setState(() {
+                              vivienda = value;
+                            });
+                          },
                         ),
-                        Text('Casa'),
+                        const Text('Casa'),
                       ],
                     ),
                     Row(
                       children: [
                         Radio(
                           value: 'Apartamento',
-                          groupValue: null,
-                          onChanged: null,
+                          groupValue: vivienda,
+                          onChanged: (value) {
+                            setState(() {
+                              vivienda = value;
+                            });
+                          },
                         ),
-                        Text('Apartamento'),
+                        const Text('Apartamento'),
                       ],
                     ),
                   ],
@@ -134,26 +225,34 @@ class SolicitudPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8.0),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
+               Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   children: [
                     Row(
                       children: [
                         Radio(
                           value: 'Sí',
-                          groupValue: null,
-                          onChanged: null,
+                          groupValue: espacio,
+                          onChanged: (value) {
+                            setState(() {
+                              espacio = value;
+                            });
+                          },
                         ),
-                        Text('Sí'),
+                        const Text('Sí'),
                       ],
                     ),
                     Row(
                       children: [
                         Radio(
                           value: 'No',
-                          groupValue: null,
-                          onChanged: null,
+                          groupValue: espacio,
+                          onChanged: (value) {
+                            setState(() {
+                              espacio = value;
+                            });
+                          },
                         ),
                         Text('No'),
                       ],
@@ -173,38 +272,50 @@ class SolicitudPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8.0),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
+               Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   children: [
                     Row(
                       children: [
                         Radio(
                           value: '1-3 horas',
-                          groupValue: null,
-                          onChanged: null,
+                          groupValue: tiempo,
+                          onChanged: (value) {
+                            setState(() {
+                              tiempo = value;
+                            });
+                          },
                         ),
-                        Text('Entre 1 y 3 horas al día'),
+                        const Text('Entre 1 y 3 horas al día'),
                       ],
                     ),
                     Row(
                       children: [
                         Radio(
                           value: '3-5 horas',
-                          groupValue: null,
-                          onChanged: null,
+                          groupValue: tiempo,
+                          onChanged: (value) {
+                            setState(() {
+                              tiempo = value;
+                            });
+                          },
                         ),
-                        Text('Entre 3 y 5 horas al día'),
+                        const Text('Entre 3 y 5 horas al día'),
                       ],
                     ),
                     Row(
                       children: [
                         Radio(
                           value: '5+ horas',
-                          groupValue: null,
-                          onChanged: null,
+                          groupValue: tiempo,
+                          onChanged: (value) {
+                            setState(() {
+                              tiempo = value;
+                            });
+                          },
                         ),
-                        Text('Más de 5 horas al día'),
+                        const Text('Más de 5 horas al día'),
                       ],
                     ),
                   ],
@@ -216,8 +327,9 @@ class SolicitudPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16.0, vertical: 32.0),
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Aquí puedes agregar la lógica para solicitar la adopción
+                    onPressed: () async {
+                      await insertarSolicitud().then((_) => 
+                       _showSuccessSnackBar(context));
                     },
                     child: const Text(
                       'Enviar Solicitud',
