@@ -96,7 +96,19 @@ class _DogsListState extends State<DogsList> {
                   return Card(
                     color: Colors.white,
                     child: ListTile(
-                      leading: Image.file(File(imagenPath)),
+                      leading: Container(
+                        width: 80, // Tamaño máximo deseado de la imagen
+                        height: 80,
+                        child: AspectRatio(
+                          aspectRatio:
+                              1, // Relación de aspecto 1:1 para una imagen cuadrada
+                          child: Image.file(
+                            File(imagenPath),
+                            fit: BoxFit
+                                .cover, // Ajustar la imagen para llenar el espacio
+                          ),
+                        ),
+                      ),
                       title: Text(nombre),
                       subtitle: Text(raza),
                       trailing: ElevatedButton(
