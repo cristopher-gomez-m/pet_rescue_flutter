@@ -109,7 +109,13 @@ class _DogsListState extends State<DogsList> {
                           ),
                         ),
                       ),
-                      title: Text(nombre),
+                      title: Text(
+                        nombre,
+                        style: TextStyle(
+                          color: Color(0xFF7689DE), // Color #7689DE
+                          fontWeight: FontWeight.bold, // Texto en negrita
+                        ),
+                      ),
                       subtitle: Text(raza),
                       trailing: ElevatedButton(
                         onPressed: () {
